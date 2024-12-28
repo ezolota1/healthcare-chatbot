@@ -1,0 +1,287 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 30px;
+  font-size: 1rem;
+  margin-top: 5px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Container for left and right panels */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Left Panel Styling */
+.left-panel {
+  width: 25%;
+  background-color: #e7f3ff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.left-panel h2,
+.left-panel h3 {
+  color: #2e7d32;
+}
+
+.user-info p {
+  font-size: 1rem;
+  margin: 10px 0;
+}
+
+.appointment-filters {
+  margin-bottom: 5px;
+}
+
+.appointments-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.appointments-list li {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-button {
+  background-color: #D1E7DD;
+  border: none;
+  color: #2e7d32;
+  padding: 8px 12px;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.left-panel .user-info {
+  display: flex;
+  flex-direction: column;  
+  align-items: flex-start;  
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-start;  
+  gap: 10px;  
+  margin-top: 10px;  
+}
+
+#edit-profile, .logout-form button {
+  padding: 6px 15px;  
+  font-size: 0.9rem;  
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#edit-profile {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.logout-form button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.logout-form button:hover {
+  background-color: #d32f2f;
+}
+
+/* Right Panel Styling */
+.right-panel {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5fafd;
+}
+
+/* Chat container */
+.chat-container {
+  background-color: #ffffff;
+  border: 2px solid #b6e2d3;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat header */
+.chat-header {
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 2px solid #cfe2ff;
+}
+
+#toggle-mode {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Chat output area */
+.chat-output {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f5fafd;
+}
+
+/* Chat messages */
+.chat-message {
+  max-width: 75%;
+  padding: 12px;
+  border-radius: 15px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+}
+
+.chat-message.user {
+  background-color: #e0f7fa;
+  color: #004d40;
+  align-self: flex-end;
+}
+
+.chat-message.bot {
+  background-color: #d1e7dd;
+  color: #1b5e20;
+  align-self: flex-start;
+}
+
+/* Chat input container */
+#chat-form {
+  display: flex;  
+  width: 100%;  
+  justify-content: center;  
+}
+
+.chat-input-container {
+  display: flex;
+  justify-content: center;  
+  padding: 30px;
+}
+
+.chat-input-container input[type="text"] {
+  flex: 1;
+  width: 60%;  
+  padding: 10px;
+  border: 2px solid #b6e2d3;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.chat-input-container button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.chat-quick-replies {
+  display: flex;
+  justify-content: center;  
+}
+
+.chat-quick-replies button {
+  background-color: #d1e7dd;
+  color: #1b5e20;
+  padding: 8px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* Appointment booking form */
+.appointment-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border: 2px solid #b6e2d3;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.appointment-form label {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.appointment-form input,
+.appointment-form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 2px solid #cfe2ff;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.appointment-form button {
+  margin-top: 15px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
