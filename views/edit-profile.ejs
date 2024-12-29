@@ -1,0 +1,38 @@
+<h2>Edit Profile</h2>
+<form action="/edit-profile" method="POST">
+  <div>
+    <label for="firstName">First Name</label>
+    <input type="text" name="firstName" value="<%= user.firstName %>" required>
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input type="text" name="lastName" value="<%= user.lastName %>" required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" name="email" value="<%= user.email %>" required>
+  </div>
+  <div>
+    <label for="phoneNumber">Phone Number</label>
+    <input type="text" name="phoneNumber" value="<%= user.phoneNumber %>">
+  </div>
+  <div>
+    <label for="dateOfBirth">Date of Birth</label>
+    <input type="date" name="dateOfBirth" value="<%= user.dateOfBirth ? user.dateOfBirth.toISOString().split('T')[0] : '' %>">
+  </div>
+  <div>
+    <label for="role">Role</label>
+    <select name="role" required>
+      <option value="doctor" <%= user.role === 'doctor' ? 'selected' : '' %>>Doctor</option>
+      <option value="patient" <%= user.role === 'patient' ? 'selected' : '' %>>Patient</option>
+      <option value="human operator" <%= user.role === 'human operator' ? 'selected' : '' %>>Human Operator</option>
+    </select>
+  </div>
+  <div>
+    <label for="password">New Password (optional)</label>
+    <input type="password" name="password">
+  </div>
+  <div>
+    <button type="submit">Update Profile</button>
+  </div>
+</form>

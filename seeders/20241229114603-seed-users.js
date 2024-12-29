@@ -1,14 +1,19 @@
 'use strict';
+const bcrypt = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    const hashedPassword1 = await bcrypt.hash('password123', 10);
+    const hashedPassword2 = await bcrypt.hash('emina', 10);
+    const hashedPassword3 = await bcrypt.hash('operator', 10);
+
     await queryInterface.bulkInsert('Users', [
       {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@example.com',
         username: 'johndoe',
-        password: 'password123', // we can hash this later
+        password: hashedPassword1, 
         dateOfBirth: '1990-01-01',
         phoneNumber: '123456789',
         role: 'doctor',
@@ -20,7 +25,7 @@ module.exports = {
         lastName: 'Zolota',
         email: 'emina@gmail.com',
         username: 'emina',
-        password: 'emina',
+        password: hashedPassword2,
         dateOfBirth: '2001-09-02',
         phoneNumber: '987654321',
         role: 'patient',
@@ -32,7 +37,7 @@ module.exports = {
         lastName: 'Operator',
         email: 'human@gmail.com',
         username: 'operator',
-        password: 'operator',
+        password: hashedPassword3,
         dateOfBirth: '2000-09-02',
         phoneNumber: '111222333',
         role: 'human operator',

@@ -33,10 +33,12 @@
 
       <div class="user-info">
         <h2>User Info</h2>
-        <p><strong>Name:</strong> <%= user.name %></p>
+        <p><strong>Name:</strong> <%= user.firstName + ' ' + user.lastName %></p>
         <p><strong>Email:</strong> <%= user.email %></p>
         <div class="buttons-container">
-          <button id="edit-profile" class="primary-button">Edit Profile</button>
+          <form action="/edit-profile" method="GET" class="logout-form">
+            <button id="edit-profile" class="primary-button">Edit Profile</button>
+          </form>
           <form action="/logout" method="POST" class="logout-form">
             <button class="secondary-button">Logout</button>
           </form>
