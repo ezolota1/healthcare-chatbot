@@ -10,12 +10,10 @@ A web application that provides a healthcare chatbot system for users to interac
 - [Database Setup](#database-setup)
 - [Running the Project](#running-the-project)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
 - User authentication (login and registration)
-- AI-powered chatbot interaction
 - Appointment booking with doctor specialization
 - MySQL database integration for storing user and appointment data
 
@@ -35,7 +33,7 @@ Follow these steps to set up the project locally:
 
    ```bash
    git clone <repository_url>
-   cd healthcare-chatbot
+   cd healthcare-chatbot-app
    ```
 
 2. **Install Dependencies**:
@@ -100,7 +98,3 @@ Follow these steps to set up the project locally:
 ## Contributing
 
 Contributions are welcome! Please fork this repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
