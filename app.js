@@ -5,6 +5,8 @@ const path = require('path');
 const flash = require('connect-flash');
 const authRoutes = require('./routes/auth');
 const chatbotAPI = require('./routes/chatbotAPI');
+const doctorAPI = require('./routes/doctorAPI');
+const appointmentAPI = require('./routes/appointmentAPI');
 require('dotenv').config();
 
 const app = express();

@@ -31,6 +31,9 @@ const Patient = sequelize.define('Patient', {
 
 // Appointment model
 const Appointment = sequelize.define('Appointment', {
+  firstName: { type: DataTypes.STRING, allowNull: false },
+  lastName: { type: DataTypes.STRING, allowNull: false },
+  uniquePersonalIdentificationNumber: { type: DataTypes.STRING, allowNull: false },
   issueDescription: { type: DataTypes.STRING, allowNull: true },
   date: { type: DataTypes.DATEONLY, allowNull: false },
   time: { type: DataTypes.TIME, allowNull: false },

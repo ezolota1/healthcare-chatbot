@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const router = express.Router();
+const { Doctor, Appointment, Patient, User } = require('../models');
 
 // Registration page
 router.get('/register', (req, res) => res.render('register'));
@@ -48,21 +49,58 @@ router.get('/chatbot', async (req, res) => {
   try {
     const user = await userController.getUserDetails(req.session.username);
 
-    const appointments = [
-      { doctor: 'Dr. Smith', date: '2024-12-28', time: '10:00 AM', type: 'upcoming' },
-      { doctor: 'Dr. Taylor', date: '2024-12-20', time: '2:00 PM', type: 'past' },
-    ];
+    const patient = await Patient.findOne({
+      where: { userId: user.id }, 
+    });
+
+    if (!patient) {
+      req.flash('error', 'Patient not found');
+      return res.redirect('/login');
+    }
+
+    const appointments = await Appointment.findAll({
+      where: { patientId: patient.id }, 
+      include: [
+        {
+          model: Doctor,
+          attributes: ['specialization'],
+          include: [
+            {
+              model: User,  
+              attributes: ['firstName', 'lastName', 'email'], 
+            }
+          ] 
+        }
+      ],
+      order: [['date', 'ASC']]  
+    });
+
+    const formattedAppointments = appointments.map(appointment => {
+      return {
+        doctor: appointment.Doctor ? `Dr. ${appointment.Doctor.User.firstName} ${appointment.Doctor.User.lastName}` : 'Unknown', 
+        date: appointment.date,
+        time: appointment.time,
+        status: appointment.status,
+        type: new Date(appointment.date) < new Date() ? 'past' : 'upcoming', 
+      };
+    });
 
     const chatMessages = [
       { text: 'Welcome to the Healthcare Chatbot!', sender: 'bot' },
       { text: 'How can I assist you today?', sender: 'bot' },
     ];
 
-    const specializations = ['Cardiology', 'Dermatology', 'Neurology'];
+    const specializations = await Doctor.findAll({
+      attributes: ['specialization'],
+      group: ['specialization'],
+    });
 
-    res.render('chatbot', { user, appointments, chatMessages, specializations });
+    const specializationList = specializations.map(doctor => doctor.specialization);
+
+    res.render('chatbot', { user, appointments: formattedAppointments, chatMessages, specializations: specializationList });
   } catch (error) {
     req.flash('error', 'Something went wrong loading the chatbot');
+    console.log(error);
     res.redirect('/login');
   }
 });

@@ -22,7 +22,8 @@
               <li class="appointment-item <%= appointment.type %>">
                 <strong>Doctor:</strong> <%= appointment.doctor %><br>
                 <strong>Date:</strong> <%= appointment.date %><br>
-                <strong>Time:</strong> <%= appointment.time %>
+                <strong>Time:</strong> <%= appointment.time %><br>
+                <strong>Status:</strong> <%= appointment.status %>
               </li>
             <% }); %>
           <% } else { %>
@@ -58,34 +59,66 @@
             <%= message.text %>
           </div>
         <% }); %>
+        <!-- Book Appointment Form (Initially Hidden) -->
+      <div id="appointment-form" class="appointment-form" style="display: none;">
+        <h3>Book an Appointment</h3>
+        <form action="/book-appointment" method="POST">
+          <div class="form-row">
+            <div class="form-column">
+              <label for="first-name">First name:</label>
+              <input type="text" id="first-name" name="firstName" required>
+            </div>
+            <div class="form-column">
+              <label for="last-name">Last name:</label>
+              <input type="text" id="last-name" name="lastName" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-column">
+              <label for="unique-id">Unique personal identification number:</label>
+              <input type="text" id="unique-id" name="uniqueId" required>
+            </div>
+            <div class="form-column">
+              <label for="specialization">Select specialization:</label>
+              <select id="specialization" name="specialization" required>
+                <% specializations.forEach(specialization => { %>
+                  <option value="<%= specialization %>"><%= specialization %></option>
+                <% }); %>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-column">
+              <label for="appointment-date">Select date:</label>
+              <input type="date" id="appointment-date" name="date" required>
+            </div>
+            <div class="form-column">
+              <label for="appointment-time">Select time:</label>
+              <input type="time" id="appointment-time" name="time" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-column">
+              <label for="description">Description of medical issue:</label>
+              <input type="text" id="description" name="description" required>
+            </div>
+          </div>
+
+          <button class="primary-button" type="submit">Submit Request</button>
+        </form>
+      </div>
       </div>
 
-      <!-- Book Appointment Form (Initially Hidden) -->
-  <div id="appointment-form" class="appointment-form" style="display: none;">
-    <h3>Book an Appointment</h3>
-    <form action="/book-appointment" method="POST">
-      <label for="specialization">Select Specialization:</label>
-      <select id="specialization" name="specialization" required>
-        <% specializations.forEach(specialization => { %>
-          <option value="<%= specialization %>"><%= specialization %></option>
-        <% }); %>
-      </select>
+      
 
-      <label for="appointment-date">Select Date:</label>
-      <input type="date" id="appointment-date" name="date" required>
-
-      <label for="appointment-time">Select Time:</label>
-      <input type="time" id="appointment-time" name="time" required>
-
-      <button class="primary-button" type="submit">Book Appointment</button>
-    </form>
-  </div>
-
-      <div class="chat-quick-replies">
+      <!-- <div class="chat-quick-replies">
         <button class="quick-reply" onclick="sendQuickReply('I want to book an appointment')">Book Appointment</button>
         <button class="quick-reply" onclick="sendQuickReply('What are your services?')">Services</button>
         <button class="quick-reply" onclick="sendQuickReply('Help')">Help</button>
-      </div>
+      </div> -->
 
       <div class="chat-input-container">
         <form id="chat-form">
@@ -99,7 +132,6 @@
           <button class="primary-button" type="submit">Send</button>
         </form>
       </div>
-      
 
     </div>
   </div>

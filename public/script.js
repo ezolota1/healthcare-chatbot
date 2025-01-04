@@ -29,6 +29,7 @@ async function sendMessage() {
 
         if (data.showAppointmentForm) {
             appointmentForm.style.display = 'block';
+            appointmentForm.style.order = '999';
         } else {
             appointmentForm.style.display = 'none';
         }
