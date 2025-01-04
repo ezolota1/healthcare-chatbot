@@ -3,11 +3,20 @@ const { User } = require('../models');
 
 // Register a new user
 const registerUser = async (userData) => {
-  const { username, password, email, firstName, lastName, role } = userData;
+  const { username, password, email, firstName, lastName, keyword } = userData;
 
   const existingUser = await User.findOne({ where: { username } }) || await User.findOne({ where: { email } });
   if (existingUser) {
     throw new Error('Username or email already exists');
+  }
+  let role = "";
+
+  if (keyword == "doc") {
+    role = "doctor";
+  } else if (keyword == "op") {
+    role = "human operator";
+  } else {
+    role = "patient";
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -20,6 +29,8 @@ const registerUser = async (userData) => {
     lastName,
     role,
   });
+
+
 
   return user;
 };

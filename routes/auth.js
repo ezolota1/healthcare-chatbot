@@ -7,10 +7,10 @@ router.get('/register', (req, res) => res.render('register'));
 
 // Register a new user
 router.post('/register', async (req, res) => {
-  const { username, password, email, firstName, lastName, role } = req.body;
+  const { username, password, email, firstName, lastName, keyword } = req.body;
 
   try {
-    await userController.registerUser({ username, password, email, firstName, lastName, role });
+    await userController.registerUser({ username, password, email, firstName, lastName, keyword });
     req.flash('success', 'Registration successful! Please log in.');
     res.redirect('/login');
   } catch (error) {

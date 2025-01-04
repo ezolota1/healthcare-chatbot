@@ -237,7 +237,7 @@ body {
 
 .chat-quick-replies {
   display: flex;
-  justify-content: center;  
+  justify-content: center; 
 }
 
 .chat-quick-replies button {
