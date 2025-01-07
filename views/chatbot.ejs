@@ -66,7 +66,7 @@
             <label for="status">Status:</label>
             <input type="text" id="status" name="status" readonly><br>
       
-            <button type="submit" id="save-appointment" style="display: none;">Save</button>
+            <button type="submit" id="save-appointment" style="display: none;" class="appointment-btn">Save</button>
           </form>
         </div>
       </div>
@@ -76,15 +76,52 @@
         <p><strong>Name:</strong> <%= user.firstName + ' ' + user.lastName %></p>
         <p><strong>Email:</strong> <%= user.email %></p>
         <div class="buttons-container">
-          <form action="/edit-profile" method="GET" class="logout-form">
+          <div class="logout-form">
             <button id="edit-profile" class="primary-button">Edit Profile</button>
-          </form>
+          </div>
           <form action="/logout" method="POST" class="logout-form">
             <button class="secondary-button">Logout</button>
           </form>
         </div>
       </div>
     </div>
+
+<!-- Modal Structure -->
+<div id="editProfileModal" class="modalEditProfile" style="display: none;">
+  <div class="modal-content">
+    <span id="closeEditModalBtn" class="close">&times;</span>
+    <h2>Edit Profile</h2>
+    <form action="/edit-profile" method="POST">
+      <div>
+        <label for="firstName">First Name</label>
+        <input type="text" name="firstName" value="<%= user.firstName %>" required>
+      </div>
+      <div>
+        <label for="lastName">Last Name</label>
+        <input type="text" name="lastName" value="<%= user.lastName %>" required>
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" value="<%= user.email %>" required>
+      </div>
+      <div>
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" name="phoneNumber" value="<%= user.phoneNumber %>">
+      </div>
+      <div>
+        <label for="dateOfBirth">Date of Birth</label>
+        <input type="date" name="dateOfBirth" value="<%= user.dateOfBirth ? user.dateOfBirth.toISOString().split('T')[0] : '' %>">
+      </div>
+      <div>
+        <label for="password">New Password (optional)</label>
+        <input type="password" name="password">
+      </div>
+      <div>
+        <button type="submit" class="appointment-btn">Update Profile</button>
+      </div>
+    </form>
+  </div>
+</div>
 
     <!-- Right Panel: Chat Interface -->
     <div class="right-panel">

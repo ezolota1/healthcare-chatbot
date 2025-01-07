@@ -258,5 +258,24 @@ function removeAppointmentFromList(appointmentId) {
     });
 }
 
-  
+/* Edit profile popup */ 
+
+const modalEditProfile = document.getElementById('editProfileModal');
+
+const openEditProfileModalBtn = document.getElementById('edit-profile');
+const closeEditProfileModalBtn = document.getElementById('closeEditModalBtn');
+
+openEditProfileModalBtn.onclick = function() {
+  modalEditProfile.style.display = "block";
+}
+
+openEditProfileModalBtn.addEventListener('click', () => {
+  modalEditProfile.style.display = 'block';
+});
+
+
+closeEditProfileModalBtn.addEventListener('click', () => {
+  modalEditProfile.style.display = 'none';
+});
+
   
