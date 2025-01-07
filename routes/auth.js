@@ -77,6 +77,7 @@ router.get('/chatbot', async (req, res) => {
 
     const formattedAppointments = appointments.map(appointment => {
       return {
+        id: appointment.id,
         doctor: appointment.Doctor ? `Dr. ${appointment.Doctor.User.firstName} ${appointment.Doctor.User.lastName}` : 'Unknown', 
         date: appointment.date,
         time: appointment.time,

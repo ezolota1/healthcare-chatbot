@@ -24,12 +24,51 @@
                 <strong>Date:</strong> <%= appointment.date %><br>
                 <strong>Time:</strong> <%= appointment.time %><br>
                 <strong>Status:</strong> <%= appointment.status %>
+                <div class="appointment-actions">
+                  <button class="view-btn appointment-btn" data-id="<%= appointment.id %>">View</button>
+                  <button class="edit-btn appointment-btn" data-id="<%= appointment.id %>">Edit</button>
+                  <button class="cancel-btn appointment-btn" data-id="<%= appointment.id %>">Cancel</button>
+                </div>
               </li>
             <% }); %>
           <% } else { %>
             <p>No appointments booked yet.</p>
           <% } %>
         </ul>
+      </div>
+
+      <div class="modal" id="appointment-modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close-modal" id="close-modal">&times;</span>
+          <h3 id="modal-title"></h3>
+          <form id="appointment-form-edit">
+            <label for="doctor">Doctor:</label>
+            <input type="text" id="doctor" name="doctor" readonly><br>
+
+            <label for="firstName">First name:</label>
+            <input type="text" id="firstName" name="firstName"><br>
+
+            <label for="lastName">Last name:</label>
+            <input type="text" id="lastName" name="lastName"><br>
+
+            <label for="uniqueId">Unique personal identification number:</label>
+            <input type="text" id="uniqueId" name="uniqueId"><br>
+      
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date"><br>
+      
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time"><br>
+
+            <label for="desc">Description:</label>
+            <input type="text" id="desc" name="desc"><br>
+      
+            <label for="status">Status:</label>
+            <input type="text" id="status" name="status" readonly><br>
+      
+            <button type="submit" id="save-appointment" style="display: none;">Save</button>
+          </form>
+        </div>
       </div>
 
       <div class="user-info">
@@ -62,7 +101,7 @@
         <!-- Book Appointment Form (Initially Hidden) -->
       <div id="appointment-form" class="appointment-form" style="display: none;">
         <h3>Book an Appointment</h3>
-        <form action="/appointment/create" method="POST">
+        <form id="appointmentForm">
           <div class="form-row">
             <div class="form-column">
               <label for="first-name">First name:</label>
