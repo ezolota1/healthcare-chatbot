@@ -3,25 +3,49 @@ const { Appointment, Doctor, Patient, TimeSlot } = require('../models');
 // Create a new appointment
 const createAppointment = async (req, res) => {
   try {
-    const { firstName, lastName, uniquePersonalIdentificationNumber, issueDescription, date, time, doctorId, patientId, timeSlotId } = req.body;
+    const {
+      firstName,
+      lastName,
+      uniqueId, 
+      description, 
+      date,
+      time,
+      specialization 
+    } = req.body;
+
+    const doctor = await Doctor.findOne({ where: { specialization } });
+    if (!doctor) {
+      return res.status(404).json({ message: 'No doctor available with the selected specialization' });
+    }
+
+    const user = await userController.getUserDetails(req.session.username);
+   
+    const userId = user.id; 
+    const patient = await Patient.findOne({ where: { userId } });
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
 
     const newAppointment = await Appointment.create({
       firstName,
       lastName,
-      uniquePersonalIdentificationNumber,
-      issueDescription,
+      uniquePersonalIdentificationNumber: uniqueId,
+      issueDescription: description,
       date,
       time,
-      doctorId,
-      patientId,
-      timeSlotId
+      status: 'Pending',
+      doctorId: doctor.id,
+      patientId: patient.id,
+      timeSlotId: null // Adjust as needed if timeSlotId logic is implemented later
     });
 
     res.status(201).json(newAppointment);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating appointment', error });
+    console.log(error);
+    res.status(500).json({ message: 'Error creating appointment', error: error.message });
   }
 };
+
 
 // Get all appointments with related Doctor, Patient, and TimeSlot data
 const getAppointments = async (req, res) => {
