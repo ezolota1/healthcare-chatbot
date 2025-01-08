@@ -9,7 +9,6 @@ A web application that provides a healthcare chatbot system for users to interac
 - [Setup Instructions](#setup-instructions)
 - [Database Setup](#database-setup)
 - [Running the Project](#running-the-project)
-- [Contributing](#contributing)
 
 ## Features
 
@@ -94,7 +93,3 @@ Follow these steps to set up the project locally:
    ```
    http://localhost:3000
    ```
-
-## Contributing
-
-Contributions are welcome! Please fork this repository and submit a pull request.
