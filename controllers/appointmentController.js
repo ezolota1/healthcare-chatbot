@@ -1,5 +1,6 @@
 const { Appointment, Doctor, Patient, TimeSlot, User } = require('../models');
 const userController = require('./userController');
+const timeslotController = require('./scheduleController');
 
 // Create a new appointment
 const createAppointment = async (req, res) => {
@@ -31,6 +32,21 @@ const createAppointment = async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
+    if (!doctor) {
+      return res.status(404).json({ message: 'No doctor available with the selected specialization' });
+    }
+
+    const hours = time.split(":")[0];
+    const formattedTime = `${hours}:00:00`;
+    const timeslot = await TimeSlot.findOne({ where: { date, time: formattedTime, isAvailable: 1 }  });
+    
+    if (!timeslot) {
+      console.log(date);
+      return res.status(404).json({ message: 'No timeslot available' });
+    }
+
+    timeslotController.updateTimeslotAvailability(timeslot.id, 0);
+
     const newAppointment = await Appointment.create({
       firstName,
       lastName,
@@ -41,7 +57,7 @@ const createAppointment = async (req, res) => {
       status: 'Pending',
       doctorId: doctor.id,
       patientId: patient.id,
-      timeSlotId: null // Adjust as needed if timeSlotId logic is implemented later
+      timeSlotId: timeslot.id
     });
 
     res.status(201).json({
@@ -135,6 +151,11 @@ const updateAppointmentStatus = async (req, res) => {
     appointment.status = status;
     await appointment.save();
 
+    if(status=='Rejected') {
+      timeslotController.updateTimeslotAvailability(appointment.timeSlotId, 1);
+      await appointment.destroy();
+    }
+
     res.status(200).json({
       success: true,
       message: `Appointment status updated to ${status}`,
@@ -181,6 +202,7 @@ const deleteAppointment = async (req, res) => {
 
     if (appointment) {
       await appointment.destroy();
+      timeslotController.updateTimeslotAvailability(appointment.timeSlotId, 1);
       res.status(200).json({ message: 'Appointment deleted successfully' });
     } else {
       res.status(404).json({ message: 'Appointment not found' });

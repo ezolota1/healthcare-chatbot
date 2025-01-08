@@ -38,7 +38,10 @@ router.post('/chat', (req, res) => {
 
   if (message.toLowerCase().includes('appointment')) {
       res.json({ reply: "I can help you with booking an appointment. Please fill out the form below.", showAppointmentForm: true });
-  } else {
+  } else if (message.toLowerCase().includes('help')) {
+    res.json({ reply: "A representative will contact you shortly.", showAppointmentForm: false });
+  }
+  else {
       res.json({ reply: "I'm here to help! Please type a valid query.", showAppointmentForm: false });
   }
 });

@@ -1,7 +1,9 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const router = express.Router();
-const { Doctor, Appointment, Patient, User } = require('../models');
+const { Doctor, Appointment, Patient, User, TimeSlot } = require('../models');
+const { Op } = require('sequelize');
+const moment = require('moment');
 
 // Registration page
 router.get('/register', (req, res) => res.render('register'));
@@ -53,7 +55,10 @@ router.get('/chatbot', async (req, res) => {
       const patient = await Patient.findOne({ where: { userId: user.id } });
 
       const appointments = await Appointment.findAll({
-        where: { patientId: patient.id },
+        where: { patientId: patient.id,
+          status: {
+          [Op.or]: ['Pending', 'Approved']
+        }  },
         include: [
           {
             model: Doctor,
@@ -130,16 +135,44 @@ router.get('/chatbot', async (req, res) => {
         time: appointment.time
       }));
 
-      const timeslots = [
-        { date: "2025-01-10", time: "09:00" },
-        { date: "2025-01-10", time: "10:30" },
-        { date: "2025-01-10", time: "14:00" },
-        { date: "2025-01-11", time: "08:30" },
-        { date: "2025-01-11", time: "12:00" },
-        { date: "2025-01-11", time: "16:00" },
-        { date: "2025-01-12", time: "11:00" },
-        { date: "2025-01-12", time: "13:30" }
-      ];
+      // const timeslots = [
+      //   { date: "2025-01-10", time: "09:00" },
+      //   { date: "2025-01-10", time: "10:30" },
+      //   { date: "2025-01-10", time: "14:00" },
+      //   { date: "2025-01-11", time: "08:30" },
+      //   { date: "2025-01-11", time: "12:00" },
+      //   { date: "2025-01-11", time: "16:00" },
+      //   { date: "2025-01-12", time: "11:00" },
+      //   { date: "2025-01-12", time: "13:30" }
+      // ];
+
+      const timeslots = await TimeSlot.findAll({
+        where: {
+          scheduleId: 1, 
+          isAvailable: 1,
+          
+          [Op.and]: [
+            {
+              date: {
+                [Op.gte]: moment().format('YYYY-MM-DD'), 
+              },
+            },
+            {
+              
+              [Op.or]: [
+                { date: { [Op.gt]: moment().format('YYYY-MM-DD') } }, 
+                {
+                  [Op.and]: [
+                    { date: moment().format('YYYY-MM-DD') }, 
+                    { time: { [Op.gt]: moment().format('HH:mm') } }, 
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        order: [['date', 'ASC'], ['time', 'ASC']], 
+      });
 
       return res.render('doctor', {
         user,
@@ -149,6 +182,7 @@ router.get('/chatbot', async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     req.flash('error', 'An error occurred while loading the chatbot.');
     res.redirect('/login');
   }

@@ -51,7 +51,6 @@ document.getElementById('chat-form').addEventListener('submit', function (event)
     sendMessage();
 });
 
-
 function filterAppointments(filter) {
     const appointmentItems = document.querySelectorAll('.appointment-booked-item');
     appointmentItems.forEach(item => {
@@ -207,9 +206,9 @@ document.getElementById('appointmentForm').addEventListener('submit', async (e) 
       <strong>Date:</strong> ${appointment.date}<br>
       <strong>Time:</strong> ${appointment.time}<br>
       <strong>Status:</strong> ${appointment.status}<br>
-      <button class="view-btn" data-id="${appointment.id}">View</button>
-      <button class="edit-btn" data-id="${appointment.id}">Edit</button>
-      <button class="cancel-btn" data-id="${appointment.id}">Cancel</button>
+      <button class="view-btn appointment-btn" data-id="${appointment.id}">View</button>
+      <button class="edit-btn appointment-btn" data-id="${appointment.id}">Edit</button>
+      <button class="cancel-btn appointment-btn" data-id="${appointment.id}">Cancel</button>
     `;
 
     list.appendChild(listItem);

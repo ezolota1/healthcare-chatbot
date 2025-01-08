@@ -1,3 +1,4 @@
+
 console.log("Update appointment status function loaded");
 // Function to send a status update request
 const updateAppointmentStatus = async (id, status) => {
@@ -13,6 +14,7 @@ const updateAppointmentStatus = async (id, status) => {
     if (response.ok) {
       const data = await response.json();
       alert(`Appointment status updated to ${status}`);
+      
       window.location.reload();
     } else {
       const error = await response.json();

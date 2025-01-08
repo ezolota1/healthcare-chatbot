@@ -7,6 +7,8 @@ const authRoutes = require('./routes/auth');
 const chatbotAPI = require('./routes/chatbotAPI');
 const doctorAPI = require('./routes/doctorAPI');
 const appointmentAPI = require('./routes/appointmentAPI');
+const scheduleAPI = require('./routes/scheduleAPI');
+
 require('dotenv').config();
 
 const app = express();
@@ -34,6 +36,7 @@ app.set('view engine', 'ejs');
 app.use('/', authRoutes);
 app.use('/chatbot', chatbotAPI);
 app.use('/appointment', appointmentAPI);
+app.use('/timeslot', scheduleAPI);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
