@@ -8,7 +8,6 @@
   <div class="container"> 
     <!-- Left Panel: User Info and Appointments -->
     <div class="left-panel">
-
       <div class="appointments-section">
         <h2>Booked Appointments</h2>
         <div class="appointment-filters">
@@ -19,11 +18,13 @@
         <ul class="appointments-list" id="appointments-list">
           <% if (appointments.length > 0) { %>
             <% appointments.forEach(appointment => { %>
-              <li class="appointment-item <%= appointment.type %>">
+              <li class="appointment-booked-item appointment-item <%= appointment.type %>">
+
                 <strong>Doctor:</strong> <%= appointment.doctor %><br>
                 <strong>Date:</strong> <%= appointment.date %><br>
                 <strong>Time:</strong> <%= appointment.time %><br>
                 <strong>Status:</strong> <%= appointment.status %>
+                  
                 <div class="appointment-actions">
                   <button class="view-btn appointment-btn" data-id="<%= appointment.id %>">View</button>
                   <button class="edit-btn appointment-btn" data-id="<%= appointment.id %>">Edit</button>
@@ -39,7 +40,7 @@
 
       <div class="modal" id="appointment-modal" style="display: none;">
         <div class="modal-content">
-          <span class="close-modal" id="close-modal">&times;</span>
+          <span class="close-button" id="close-modal">&times;</span>
           <h3 id="modal-title"></h3>
           <form id="appointment-form-edit">
             <label for="doctor">Doctor:</label>
@@ -89,7 +90,7 @@
 <!-- Modal Structure -->
 <div id="editProfileModal" class="modalEditProfile" style="display: none;">
   <div class="modal-content">
-    <span id="closeEditModalBtn" class="close">&times;</span>
+    <span id="closeEditModalBtn" class="close-button">&times;</span>
     <h2>Edit Profile</h2>
     <form action="/edit-profile" method="POST">
       <div>
@@ -125,10 +126,11 @@
 
     <!-- Right Panel: Chat Interface -->
     <div class="right-panel">
+
       <header class="chat-header">
         <h2>Healthcare Chatbot</h2>
       </header>
-
+     
       <div class="chat-output" id="chat-output">
         <% chatMessages.forEach(message => { %>
           <div class="chat-message <%= message.sender %>">
@@ -208,7 +210,6 @@
           <button class="primary-button" type="submit">Send</button>
         </form>
       </div>
-
     </div>
   </div>
 

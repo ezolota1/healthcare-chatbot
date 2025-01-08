@@ -116,6 +116,35 @@ const getAppointmentById = async (req, res) => {
   }
 };
 
+const updateAppointmentStatus = async (req, res) => {
+  const { id } = req.params; 
+  const { status } = req.body; 
+
+  const validStatuses = ['Pending', 'Approved', 'Rejected'];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ success: false, message: 'Invalid status value' });
+  }
+
+  try {
+    const appointment = await Appointment.findByPk(id);
+
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'Appointment not found' });
+    }
+
+    appointment.status = status;
+    await appointment.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Appointment status updated to ${status}`,
+      data: appointment,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error updating appointment status', error });
+  }
+};
+
 // Update an appointment by ID
 const updateAppointment = async (req, res) => {
   try {
@@ -164,6 +193,7 @@ const deleteAppointment = async (req, res) => {
 module.exports = {
   createAppointment,
   getAppointments,
+  updateAppointmentStatus,
   getAppointmentById,
   updateAppointment,
   deleteAppointment

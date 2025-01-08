@@ -49,62 +49,111 @@ router.get('/chatbot', async (req, res) => {
   try {
     const user = await userController.getUserDetails(req.session.username);
 
-    const patient = await Patient.findOne({
-      where: { userId: user.id }, 
-    });
+    if (req.session.role === 'patient') {
+      const patient = await Patient.findOne({ where: { userId: user.id } });
 
-    if (!patient) {
-      req.flash('error', 'Patient not found');
-      return res.redirect('/login');
-    }
+      const appointments = await Appointment.findAll({
+        where: { patientId: patient.id },
+        include: [
+          {
+            model: Doctor,
+            attributes: ['specialization'],
+            include: [{ model: User, attributes: ['firstName', 'lastName', 'email'] }]
+          }
+        ],
+        order: [['date', 'ASC']]
+      });
 
-    const appointments = await Appointment.findAll({
-      where: { patientId: patient.id }, 
-      include: [
-        {
-          model: Doctor,
-          attributes: ['specialization'],
-          include: [
-            {
-              model: User,  
-              attributes: ['firstName', 'lastName', 'email'], 
-            }
-          ] 
-        }
-      ],
-      order: [['date', 'ASC']]  
-    });
-
-    const formattedAppointments = appointments.map(appointment => {
-      return {
+      const formattedAppointments = appointments.map(appointment => ({
         id: appointment.id,
-        doctor: appointment.Doctor ? `Dr. ${appointment.Doctor.User.firstName} ${appointment.Doctor.User.lastName}` : 'Unknown', 
+        doctor: appointment.Doctor ? `Dr. ${appointment.Doctor.User.firstName} ${appointment.Doctor.User.lastName}` : 'Unknown',
         date: appointment.date,
         time: appointment.time,
         status: appointment.status,
-        type: new Date(appointment.date) < new Date() ? 'past' : 'upcoming', 
-      };
-    });
+        type: new Date(appointment.date) < new Date() ? 'past' : 'upcoming'
+      }));
 
-    const chatMessages = [
-      { text: 'Welcome to the Healthcare Chatbot!', sender: 'bot' },
-      { text: 'How can I assist you today?', sender: 'bot' },
-    ];
+      const chatMessages = [
+        { text: 'Welcome to the Healthcare Chatbot!', sender: 'bot' },
+        { text: 'How can I assist you today?', sender: 'bot' }
+      ];
 
-    const specializations = await Doctor.findAll({
-      attributes: ['specialization'],
-      group: ['specialization'],
-    });
+      const specializations = await Doctor.findAll({
+        attributes: ['specialization'],
+        group: ['specialization']
+      });
 
-    const specializationList = specializations.map(doctor => doctor.specialization);
+      const specializationList = specializations.map(doc => doc.specialization);
 
-    res.render('chatbot', { user, appointments: formattedAppointments, chatMessages, specializations: specializationList });
+      return res.render('chatbot', {
+        user,
+        appointments: formattedAppointments,
+        chatMessages,
+        specializations: specializationList
+      });
+    } else if (req.session.role === 'doctor') {
+      const doctor = await Doctor.findOne({ where: { userId: user.id } });
+
+      const appointments = await Appointment.findAll({
+        where: { doctorId: doctor.id, status: 'Approved' },
+        include: [
+          {
+            model: Patient,
+            include: [{ model: User, attributes: ['firstName', 'lastName', 'email'] }]
+          }
+        ],
+        order: [['date', 'ASC']]
+      });
+
+      const formattedAppointments = appointments.map(appointment => ({
+        id: appointment.id,
+        patient: `${appointment.firstName} ${appointment.lastName}`,
+        date: appointment.date,
+        time: appointment.time,
+        status: appointment.status
+      }));
+
+      const pendingAppointments = await Appointment.findAll({
+        where: { doctorId: doctor.id, status: 'Pending' },
+        include: [
+          {
+            model: Patient,
+            include: [{ model: User, attributes: ['firstName', 'lastName'] }]
+          }
+        ]
+      });
+
+      const formattedPendingAppointments = pendingAppointments.map(appointment => ({
+        id: appointment.id,
+        patient: `${appointment.firstName} ${appointment.lastName}`,
+        date: appointment.date,
+        time: appointment.time
+      }));
+
+      const timeslots = [
+        { date: "2025-01-10", time: "09:00" },
+        { date: "2025-01-10", time: "10:30" },
+        { date: "2025-01-10", time: "14:00" },
+        { date: "2025-01-11", time: "08:30" },
+        { date: "2025-01-11", time: "12:00" },
+        { date: "2025-01-11", time: "16:00" },
+        { date: "2025-01-12", time: "11:00" },
+        { date: "2025-01-12", time: "13:30" }
+      ];
+
+      return res.render('doctor', {
+        user,
+        appointments: formattedAppointments,
+        pendingAppointments: formattedPendingAppointments,
+        timeslots: timeslots
+      });
+    }
   } catch (error) {
-    req.flash('error', 'Something went wrong loading the chatbot');
-    console.log(error);
+    req.flash('error', 'An error occurred while loading the chatbot.');
     res.redirect('/login');
   }
 });
+
 
 // Edit user profile
 router.get('/edit-profile', async (req, res) => {

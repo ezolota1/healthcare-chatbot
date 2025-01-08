@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/style.css">
+  <title>Doctor Dashboard</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Panel: User Info and Appointments -->
+    <div class="left-panel">
+       
+
+      <div class="appointments-section">
+        <h2>Welcome, Dr. <%= user.firstName %> <%= user.lastName %></h2>
+        <h2>Booked Appointments</h2>
+        <div class="appointment-filters">
+          <button class="filter-button" onclick="filterAppointments('upcoming')">Upcoming</button>
+          <button class="filter-button" onclick="filterAppointments('past')">Past</button>
+          <button class="filter-button" onclick="filterAppointments('all')">All</button>
+        </div>
+        <ul class="appointments-list" id="appointments-list">
+          <% if (appointments.length > 0) { %>
+            <% appointments.forEach(appointment => { %>
+              <li class="appointment-booked-item appointment-item <%= appointment.type %>">
+
+                <strong>Doctor:</strong> <%= appointment.patient %><br>
+                <strong>Date:</strong> <%= appointment.date %><br>
+                <strong>Time:</strong> <%= appointment.time %><br>
+                <strong>Status:</strong> <%= appointment.status %>
+                  
+                <div class="appointment-actions">
+                  <button class="view-btn appointment-btn" data-id="<%= appointment.id %>">View</button>
+                  <button class="edit-btn appointment-btn" data-id="<%= appointment.id %>">Edit</button>
+                  <button class="cancel-btn appointment-btn" data-id="<%= appointment.id %>">Cancel</button>
+                </div>
+              </li>
+            <% }); %>
+          <% } else { %>
+            <p>No appointments booked yet.</p>
+          <% } %>
+        </ul>
+      </div>
+
+      <div class="modal" id="appointment-modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close-button" id="close-modal">&times;</span>
+          <h3 id="modal-title"></h3>
+          <form id="appointment-form-edit">
+            <label for="doctor">Doctor:</label>
+            <input type="text" id="doctor" name="doctor" readonly><br>
+
+            <label for="firstName">First name:</label>
+            <input type="text" id="firstName" name="firstName"><br>
+
+            <label for="lastName">Last name:</label>
+            <input type="text" id="lastName" name="lastName"><br>
+
+            <label for="uniqueId">Unique personal identification number:</label>
+            <input type="text" id="uniqueId" name="uniqueId"><br>
+      
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date"><br>
+      
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time"><br>
+
+            <label for="desc">Description:</label>
+            <input type="text" id="desc" name="desc"><br>
+      
+            <label for="status">Status:</label>
+            <input type="text" id="status" name="status" readonly><br>
+      
+            <button type="submit" id="save-appointment" style="display: none;" class="appointment-btn">Save</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <h2>User Info</h2>
+        <p><strong>Name:</strong> <%= user.firstName + ' ' + user.lastName %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <div class="buttons-container">
+          <div class="logout-form">
+            <button id="edit-profile" class="primary-button">Edit Profile</button>
+          </div>
+          <form action="/logout" method="POST" class="logout-form">
+            <button class="secondary-button">Logout</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Structure -->
+<div id="editProfileModal" class="modalEditProfile" style="display: none;">
+    <div class="modal-content">
+      <span id="closeEditModalBtn" class="close-button">&times;</span>
+      <h2>Edit Profile</h2>
+      <form action="/edit-profile" method="POST">
+        <div>
+          <label for="firstName">First Name</label>
+          <input type="text" name="firstName" value="<%= user.firstName %>" required>
+        </div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <input type="text" name="lastName" value="<%= user.lastName %>" required>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" name="email" value="<%= user.email %>" required>
+        </div>
+        <div>
+          <label for="phoneNumber">Phone Number</label>
+          <input type="text" name="phoneNumber" value="<%= user.phoneNumber %>">
+        </div>
+        <div>
+          <label for="dateOfBirth">Date of Birth</label>
+          <input type="date" name="dateOfBirth" value="<%= user.dateOfBirth ? user.dateOfBirth.toISOString().split('T')[0] : '' %>">
+        </div>
+        <div>
+          <label for="password">New Password (optional)</label>
+          <input type="password" name="password">
+        </div>
+        <div>
+          <button type="submit" class="appointment-btn">Update Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <!-- Pending Appointments Section -->
+    <div class="pending-appointments">
+      <h3>Pending Appointments</h3>
+      <ul>
+        <% if (pendingAppointments.length > 0) { %>
+          <% pendingAppointments.forEach(appointment => { %>
+            <li>
+              <strong>Patient:</strong> <%= appointment.patient %><br>
+              <strong>Date:</strong> <%= appointment.date %><br>
+              <strong>Time:</strong> <%= appointment.time %><br>
+              <button onclick="updateAppointmentStatus('<%= appointment.id %>', 'Approved')" style="background-color: #45A049;">Approve</button>
+              <button onclick="updateAppointmentStatus('<%= appointment.id %>', 'Rejected')" style="background-color: #D32F2F;">Reject</button>
+            </li>
+          <% }); %>
+        <% } else { %>
+          <p>No pending appointments.</p>
+        <% } %>
+      </ul>
+    </div>
+  
+    <!-- Manage Timeslots Section -->
+<div class="timeslot-management">
+    <div class="timeslot-header">
+        <h3>Manage Timeslots</h3>
+        <button id="open-timeslot-modal">Add Timeslot</button>
+    </div>
+  
+    <!-- Modal for adding timeslot -->
+    <div id="timeslot-modal" class="modal modalTimeslot" style="display:none;">
+      <div class="modal-content">
+        <span class="close-button" id="close-timeslot-modal">&times;</span>
+        <h4>Add a New Timeslot</h4>
+        <form action="/doctor/add-timeslot" method="POST">
+          <label for="timeslot-date">Date:</label>
+          <input type="date" id="timeslot-date" name="date" required>
+          <label for="timeslot-time">Time:</label>
+          <input type="time" id="timeslot-time" name="time" required>
+          <button type="submit">Add Timeslot</button>
+        </form>
+      </div>
+    </div>
+  
+    <div class="available-timeslots">
+      <h4>Available Timeslots</h4>
+      <ul>
+        <% timeslots.forEach(timeslot => { %>
+          <li>
+            <strong>Date:</strong> <%= timeslot.date %> <br>
+            <strong>Time:</strong> <%= timeslot.time %>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+  
+      </div>
+  
+  <script src="/doctorScript.js"></script>
+
+</body>
+</html>

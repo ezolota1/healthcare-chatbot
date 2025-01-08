@@ -1,55 +1,28 @@
-async function sendMessage() {
-    const chatOutput = document.getElementById('chat-output');
-    const chatInput = document.getElementById('chat-input');
-    const appointmentForm = document.getElementById('appointment-form');
-    const message = chatInput.value.trim();
+console.log("Update appointment status function loaded");
+// Function to send a status update request
+const updateAppointmentStatus = async (id, status) => {
+  try {
+    const response = await fetch(`/appointment/${id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
 
-    if (!message) return;
-
-    const userMessage = document.createElement('div');
-    userMessage.classList.add('chat-message', 'user');
-    userMessage.textContent = message;
-    chatOutput.appendChild(userMessage);
-
-    try {
-        const response = await fetch('/chatbot/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message }),
-        });
-
-        const data = await response.json();
-
-        const botMessage = document.createElement('div');
-        botMessage.classList.add('chat-message', 'bot');
-        botMessage.textContent = data.reply || "Sorry, something went wrong.";
-        chatOutput.appendChild(botMessage);
-
-        if (data.showAppointmentForm) {
-            appointmentForm.style.display = 'block';
-            appointmentForm.style.order = '999';
-        } else {
-            appointmentForm.style.display = 'none';
-        }
-
-        chatOutput.scrollTop = chatOutput.scrollHeight;
-    } catch (error) {
-        console.error('Error:', error);
-        const errorMessage = document.createElement('div');
-        errorMessage.classList.add('chat-message', 'error');
-        errorMessage.textContent = "Error communicating with the server. Please try again.";
-        chatOutput.appendChild(errorMessage);
+    if (response.ok) {
+      const data = await response.json();
+      alert(`Appointment status updated to ${status}`);
+      window.location.reload();
+    } else {
+      const error = await response.json();
+      alert(`Error: ${error.message}`);
     }
-
-    chatInput.value = '';
-}
-
-document.getElementById('chat-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-    sendMessage();
-});
+  } catch (err) {
+    console.error('Error updating status:', err);
+    alert('An error occurred while updating the appointment status.');
+  }
+};
 
 
 function filterAppointments(filter) {
@@ -63,45 +36,6 @@ function filterAppointments(filter) {
     });
 }
 
-function handleKeyPress(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        sendMessage();
-    }
-}
-
-document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-  
-    const formData = new FormData(e.target);
-    const appointmentData = Object.fromEntries(formData);
-    const chatOutput = document.getElementById('chat-output');
-    const appointmentForm = document.getElementById('appointment-form');
-  
-    try {
-      const response = await fetch('/appointment/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(appointmentData),
-      });
-  
-      if (response.ok) {
-        const newAppointment = await response.json();
-        addAppointmentToList(newAppointment);
-        appointmentForm.style.display = 'none';
-        const botMessage = document.createElement('div');
-        botMessage.classList.add('chat-message', 'bot');
-        botMessage.textContent = "Appointment request is successfully submitted." || "Sorry, something went wrong.";
-        chatOutput.appendChild(botMessage);
-      } else {
-        const error = await response.json();
-        console.error(error.message);
-        alert(error.message);
-      }
-    } catch (err) {
-      console.error('Error creating appointment:', err);
-    }
-  });
 
   document.getElementById('appointments-list').addEventListener('click', async (e) => {
     const target = e.target;
@@ -279,5 +213,16 @@ closeEditProfileModalBtn.addEventListener('click', () => {
   modalEditProfile.style.display = 'none';
 });
 
+/* Timeslot modal */ 
+const timeslotModal = document.getElementById("timeslot-modal");
+const btn = document.getElementById("open-timeslot-modal");
+const span = document.getElementById("close-timeslot-modal");
 
-  
+btn.onclick = function() {
+  timeslotModal.style.display = "block";
+}
+
+span.onclick = function() {
+  timeslotModal.style.display = "none";
+}
+
