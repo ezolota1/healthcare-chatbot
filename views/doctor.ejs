@@ -159,10 +159,10 @@
       <div class="modal-content">
         <span class="close-button" id="close-timeslot-modal">&times;</span>
         <h4>Add a New Timeslot</h4>
-        <form action="/doctor/add-timeslot" method="POST">
-          <label for="timeslot-date">Date:</label>
+        <form id="timeslotForm">
+          <label for="date">Date:</label>
           <input type="date" id="timeslot-date" name="date" required>
-          <label for="timeslot-time">Time:</label>
+          <label for="time">Time:</label>
           <input type="time" id="timeslot-time" name="time" required>
           <button type="submit">Add Timeslot</button>
         </form>

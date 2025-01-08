@@ -94,8 +94,16 @@ document.getElementById('appointmentForm').addEventListener('submit', async (e) 
         chatOutput.appendChild(botMessage);
       } else {
         const error = await response.json();
+        if(error.message == "No timeslot available") {
+          appointmentForm.style.display = 'none';
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('chat-message', 'bot');
+        botMessage.textContent = "No timeslot available. Do you need help?";
+        chatOutput.appendChild(botMessage);
+        } else {
         console.error(error.message);
         alert(error.message);
+        }
       }
     } catch (err) {
       console.error('Error creating appointment:', err);

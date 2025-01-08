@@ -1,28 +1,34 @@
 const { TimeSlot } = require('../models'); 
 const { Op } = require('sequelize');
 
-// Add a new timeslot
-const addTimeslot = async (timeslotData) => {
-    const { time, date } = timeslotData;
-  
+const addTimeslot = async (req, res) => {
+  try {
+    const { date, time } = req.body;
+
     // Schedule ID and isAvailable are always 1 for now
     const scheduleId = 1;
     const isAvailable = 1;
-  
-    const existingTimeslot = await TimeSlot.findOne({ where: { date, time } });
-    if (existingTimeslot) {
-      throw new Error('Timeslot already exists for this date and time.');
-    }
-  
-    const newTimeslot = await TimeSlot.create({
-      date,
-      time,
-      scheduleId,
-      isAvailable
+
+    const existingTimeslot = await TimeSlot.findOne({
+      where: { date, time },
     });
-  
-    return newTimeslot;
-  };
+
+    if (existingTimeslot) {
+      return res.status(409).json({ message: 'Timeslot already exists.' });
+    }
+
+    const newTimeslot = await TimeSlot.create({ date, time, isAvailable, scheduleId });
+
+    // Send a success response
+    res.status(201).json({
+      message: 'Timeslot added successfully.',
+      timeslot: newTimeslot,
+    });
+  } catch (error) {
+    console.error('Error adding timeslot:', error);
+    res.status(500).json({ message: 'An error occurred while adding the timeslot.', error });
+  }
+};
 
 // Get all timeslots for a specific date
 const getTimeslotsByDate = async (date) => {

@@ -228,3 +228,30 @@ span.onclick = function() {
   timeslotModal.style.display = "none";
 }
 
+const timeslotForm = document.getElementById('timeslotForm');
+
+timeslotForm.addEventListener('submit', async function (event) {
+  event.preventDefault(); 
+
+  const formData = new FormData(form);
+  const payload = Object.fromEntries(formData.entries());
+
+  try {
+    const response = await fetch('/timeslot/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      alert('Timeslot added successfully!');
+      window.location.reload(); 
+    } else {
+      const errorData = await response.json();
+      alert(`Error: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert('An error occurred while adding the timeslot.');
+  }
+});
